@@ -1,4 +1,6 @@
 
+import {revalidateTag} from 'next/cache'
+
 interface Product{
     id:number 
     title:string
@@ -10,21 +12,43 @@ interface Product{
  async function Shop() {
 
 const res = await fetch("http://localhost:8000/products",{
-    cache:'no-cache'
+    cache:'no-cache',next:{
+        tags:['products']
+    }
 })
 
 const data :Product[] = await res.json()
 
+  async function addProduct(e:FormData){
+'use server'
+ const title =e.get('title')
+ const price= e.get('price')
+ const newProduct ={
+    title:title ,price:price
+ }
+ await fetch("http://localhost:8000/products",{
+    method:'POST',
+    body:JSON.stringify(newProduct),
+    headers:{
+        'Content-Type':'application/json'
+    }
+ })
+ revalidateTag('products')
+  }
+
 
     return (
       <div>
-        <form className="flex flex-col gap-5 max-w-xl p-8 mx-auto bg-slate-800 rounded-md ">
+        <form action={addProduct}
+         className="flex flex-col gap-5 max-w-xl p-8 mx-auto bg-slate-800 rounded-md ">
           <input
+          name="title"
             type="text"
             placeholder="Title"
             className="p-2 bg-slate-600 outline-none rounded-md"
           />
           <input
+          name="price"
             type="text"
             placeholder="Price"
             className="p-2 bg-slate-600 outline-none rounded-md"

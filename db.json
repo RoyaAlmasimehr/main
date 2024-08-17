@@ -9,6 +9,16 @@
       "id": 2,
       "title": "product 2",
       "price": 299
+    },
+    {
+      "id": "41f8",
+      "title": "product3",
+      "price": "347"
+    },
+    {
+      "id": "37e2",
+      "title": "products4",
+      "price": "884"
     }
   ]
 }
